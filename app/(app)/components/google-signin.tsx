@@ -4,6 +4,7 @@ import * as AuthSession from 'expo-auth-session';
 import { useSSO } from '@clerk/clerk-expo';
 import { View, Button, Platform, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 // Preloads the browser for Android devices to reduce authentication load time
 // See: https://docs.expo.dev/guides/authentication/#improving-user-experience
@@ -51,7 +52,7 @@ export default function GoogleSignInButton() {
               return;
             }
 
-            router.push('/');
+            router.push('/(app)/(tabs)');
           },
         });
       } else {
