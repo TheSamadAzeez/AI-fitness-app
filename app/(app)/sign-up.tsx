@@ -11,6 +11,7 @@ import { useSignUp } from '@clerk/clerk-expo';
 import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { Alert } from 'react-native';
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -25,6 +26,11 @@ export default function SignUpScreen() {
   // Handle submission of sign-up form
   const onSignUpPress = async () => {
     if (!isLoaded) return;
+    if (!emailAddress || !password) {
+      Alert.alert('Error', 'All fields are required to sign up.');
+      return;
+    }
+    setIsLoading(true);
 
     console.log(emailAddress, password);
 
@@ -41,16 +47,36 @@ export default function SignUpScreen() {
       // Set 'pendingVerification' to true to display second form
       // and capture OTP code
       setPendingVerification(true);
-    } catch (err) {
+    } catch (err: any) {
       // See https://clerk.com/docs/guides/development/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+
+      // Extract and display user-friendly error message
+      let errorMessage = 'An error occurred during sign up. Please try again.';
+
+      if (err?.errors && Array.isArray(err.errors) && err.errors.length > 0) {
+        // Get the first error message from Clerk
+        errorMessage = err.errors[0].longMessage || err.errors[0].message || errorMessage;
+      } else if (err?.message) {
+        errorMessage = err.message;
+      }
+
+      Alert.alert('Sign Up Error', errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Handle submission of verification form
   const onVerifyPress = async () => {
     if (!isLoaded) return;
+    if (!code) {
+      Alert.alert('Error', 'Please enter verification code');
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       // Use the code the user provided to attempt verification
@@ -72,6 +98,8 @@ export default function SignUpScreen() {
       // See https://clerk.com/docs/guides/development/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+    } finally {
+      setIsLoading(false);
     }
   };
 
