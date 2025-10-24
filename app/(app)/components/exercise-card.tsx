@@ -1,16 +1,15 @@
 import { urlFor } from '@/src/lib/sanity/client';
 import { Exercise } from '@/src/lib/sanity/types';
 import { Ionicons } from '@expo/vector-icons';
-import { Image, TouchableOpacity } from 'react-native';
-import { View, Text } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 const getDifficuiltyColor = (difficulty: string) => {
   switch (difficulty) {
-    case 'Beginner':
+    case 'beginner':
       return 'bg-green-500';
-    case 'Intermediate':
+    case 'intermediate':
       return 'bg-yellow-500';
-    case 'Advanced':
+    case 'advanced':
       return 'bg-red-500';
     default:
       return 'bg-gray-500';
@@ -67,7 +66,7 @@ export default function ExerciseCard({ item, onPress, showChevron }: ExerciseCar
 
           <View className="flex-row items-center justify-between">
             <View
-              className={`rounded-full px-3 py-1 ${getDifficuiltyColor(item?.difficulty?.toUpperCase() as string)}`}>
+              className={`rounded-full px-3 py-1 ${getDifficuiltyColor(item?.difficulty as string)}`}>
               <Text className="text-xs font-semibold text-white">
                 {getDifficuiltyText(item?.difficulty?.toLowerCase() as string)}
               </Text>
