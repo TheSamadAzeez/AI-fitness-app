@@ -15,7 +15,7 @@
     "@clerk/clerk-expo": "^2.17.0",
     "@expo/vector-icons": "^15.0.2",
     "@react-navigation/native": "^7.1.6",
-    "@sanity/client": "3.2.1",
+    "@sanity/client": "7.12.0",
     "@sanity/image-url": "^1.2.0",
     "expo": "^54.0.0",
     "expo-constants": "~18.0.9",
