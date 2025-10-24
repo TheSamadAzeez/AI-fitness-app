@@ -1,12 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatList, RefreshControl, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-// import type { Exercise } from '../../../sanity/sanity.types';
-import ExerciseCard from '@/components/ExerciseCard';
-import { defineQuery } from 'groq';
 import { client } from '@/src/lib/sanity/client';
+import { Exercise } from '@/src/lib/sanity/types';
+import { defineQuery } from 'groq';
+import ExerciseCard from '../components/exercise-card';
 
 // define the GROQ query to fetch exercises outside the component to avoid re-creation on each render
 export const exercisesQuery = defineQuery('*[_type == "exercise"]{...}');
@@ -14,8 +14,8 @@ export const exercisesQuery = defineQuery('*[_type == "exercise"]{...}');
 export default function Exercises() {
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-  const [exercises, setExercises] = useState([]);
-  const [filteredExercises, setFilteredExercises] = useState([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
 
   const router = useRouter();
 
@@ -28,6 +28,19 @@ export default function Exercises() {
       console.error('Error fetching exercises:', error);
     }
   };
+
+  // Fetch exercises on component mount
+  useEffect(() => {
+    fetchExercises();
+  }, []);
+
+  // Filter exercises based on search query and when the exercises list changes
+  useEffect(() => {
+    const filtered = exercises.filter((exercise: Exercise) =>
+      exercise?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredExercises(filtered);
+  }, [searchQuery, exercises]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -62,7 +75,7 @@ export default function Exercises() {
 
       {/* exercise list */}
       <FlatList
-        data={[] as any}
+        data={filteredExercises}
         keyExtractor={(item) => item._id}
         showsVerticalScrollIndicator={true}
         contentContainerStyle={{ padding: 24 }}
