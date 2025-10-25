@@ -15,7 +15,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 // Helper functions for difficulty display
 const getDifficuiltyColor = (difficulty: string) => {
