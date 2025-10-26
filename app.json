@@ -5,10 +5,10 @@
     "version": "1.0.0",
 
     "scheme": "AI-fitness-app",
-    "platforms": ["ios", "android"],
+    "platforms": ["ios", "android", "web"],
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/favicon.png"
     },
     "plugins": ["expo-router"],
