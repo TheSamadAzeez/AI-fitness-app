@@ -72,7 +72,34 @@ export default function ExerciseDetail() {
     fetchExercise();
   }, [id]);
 
-  const getAiGuidance = async () => {};
+  //   Fetch AI guidance for the exercise
+  const getAiGuidance = async () => {
+    if (!exercise) return;
+
+    setAILoading(true);
+
+    try {
+      const response = await fetch('/api/ai', {
+        method: 'POST',
+        body: JSON.stringify({ exerciseName: exercise.name }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch AI guidance');
+      }
+
+      const data = await response.json();
+      setAIGuidance(data.guidance);
+    } catch (error) {
+      console.error('Error fetching AI guidance:', error);
+      setAIGuidance('Sorry, there was an error getting AI guidance. Please try again.');
+    } finally {
+      setAILoading(false);
+    }
+  };
 
   if (loading) {
     return (
