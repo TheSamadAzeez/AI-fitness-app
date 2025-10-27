@@ -1,10 +1,10 @@
-import OpenAI from 'openai';
+import { GoogleGenAI } from '@google/genai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const googleGenAI = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
 });
 
-// route for generating AI exercise instructions using OpenAI
+// route for generating AI exercise instructions using Google GenAI
 export async function POST(req: Request) {
   const { exerciseName } = await req.json();
 
@@ -61,13 +61,21 @@ Keep your tone encouraging, educational, and suitable for a fitness app or guide
 `;
 
   try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
+    const response = await googleGenAI.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
     });
 
-    console.log('OpenAI Response:', response);
-    return Response.json({ message: response.choices[0].message?.content });
+    // console.log('Google GenAI Response:', response);
+
+    // Extract the text from the response
+    const generatedText = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    if (!generatedText) {
+      throw new Error('No text content in response');
+    }
+    // console.log('Generated Text:', generatedText);
+    return Response.json({ guidance: generatedText });
   } catch (error) {
     console.error('Error generating AI response:', error);
     return Response.json({ error: 'Error fetching AI response' }, { status: 500 });
