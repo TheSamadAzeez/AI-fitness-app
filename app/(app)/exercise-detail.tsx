@@ -15,6 +15,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Markdown from 'react-native-markdown-display';
 
 // Helper functions for difficulty display
 const getDifficuiltyColor = (difficulty: string) => {
@@ -188,7 +189,44 @@ export default function ExerciseDetail() {
             </View>
           )}
 
-          {/*TODO: AI guidance */}
+          {/*AI guidance */}
+          {(aiGuidance || aiLoading) && (
+            <View className="mb-6">
+              <View className="mb-3 flex-row items-center">
+                <Ionicons name="fitness" size={24} color={'#3882F6'} />
+                <Text className="ml-2 text-xl font-semibold text-gray-800">AI coach says...</Text>
+              </View>
+
+              {aiLoading ? (
+                <View className="bg-gray-50r items-center rounded-xl p-4">
+                  <ActivityIndicator size={'small'} color={'#3882F6'} />
+                  <Text className="mt-2 text-gray-600">Getting personalized guidance</Text>
+                </View>
+              ) : (
+                <View className="rounded-xl border-l-4 border-blue-500 bg-blue-50 p-4">
+                  <Markdown
+                    style={{
+                      body: { paddingBottom: 20 },
+                      heading2: {
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        marginTop: 12,
+                        marginBottom: 6,
+                        color: '#1f2937',
+                      },
+                      heading3: {
+                        fontSize: 16,
+                        fontWeight: '600',
+                        marginTop: 8,
+                        marginBottom: 4,
+                      },
+                    }}>
+                    {aiGuidance}
+                  </Markdown>
+                </View>
+              )}
+            </View>
+          )}
 
           {/* Action buttons  */}
           <View className="mt-8 gap-2">
