@@ -1,4 +1,4 @@
-import { formatDuration } from '@/lib/utils';
+import { formatDate, formatDuration } from '@/lib/utils';
 import { client } from '@/src/lib/sanity/client';
 import type { GetWorkoutQueryResult } from '@/src/lib/sanity/types';
 import { useUser } from '@clerk/clerk-expo';
@@ -6,7 +6,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { defineQuery } from 'groq';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, RefreshControl, ScrollView, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const getWorkoutQuery = defineQuery(`*[_type == "workout" && userId == $userId] | order(date desc){
@@ -77,6 +84,18 @@ export default function HistoryPage() {
     return formatDuration(seconds);
   };
 
+  const getTotalSets = (workout: GetWorkoutQueryResult[number]) => {
+    return (
+      workout?.exercises?.reduce((total, exercise) => {
+        return total + (exercise.sets?.length || 0);
+      }, 0) || 0
+    );
+  };
+
+  const getExerciseNames = (workout: GetWorkoutQueryResult[number]) => {
+    return workout.exercises?.map((exercise) => exercise.exercise?.name).filter(Boolean) || [];
+  };
+
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-gray-50">
@@ -114,7 +133,81 @@ export default function HistoryPage() {
               Your completed workouts will appear here
             </Text>
           </View>
-        ) : null}
+        ) : (
+          <View className="gap-4 space-y-4">
+            {workouts.map((workout) => (
+              <TouchableOpacity
+                key={workout._id}
+                className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
+                activeOpacity={0.7}
+                onPress={() => {
+                  router.push({
+                    pathname: '/history/workout-record',
+                    params: { workoutId: workout._id },
+                  });
+                }}>
+                {/* Workout header */}
+                <View className="mb-4 flex-row items-center justify-between">
+                  <View className="flex-1">
+                    <Text className="text-lg font-semibold text-gray-900">
+                      {formatDate(workout.date as string)}
+                    </Text>
+                    <View className="mt-1 flex-row items-center">
+                      <Ionicons name="time-outline" size={16} color={'#6B7280'} />
+                      <Text className="ml-2 text-gray-600">
+                        {formatWorkoutDuration(workout.duration as number)}
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                    <Ionicons name="fitness-outline" size={24} color={'#3B82F6'} />
+                  </View>
+                </View>
+
+                {/* workout stats */}
+                <View className="mb-4 flex-row items-center justify-between">
+                  <View className="flex-row items-center">
+                    <View className="mr-3 rounded-lg bg-gray-100 px-3 py-2">
+                      <Text className="text-sm font-medium text-gray-700">
+                        {workout.exercises?.length || 0} exercise
+                        {(workout.exercises?.length || 0) !== 1 ? 's' : ''}
+                      </Text>
+                    </View>
+                    <View className="rounded-lg bg-gray-100 px-3 py-2">
+                      <Text className="text-sm font-medium text-gray-700">
+                        {getTotalSets(workout)} set
+                        {getTotalSets(workout) !== 1 ? 's' : ''}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+
+                {/* exercise list */}
+                {workout.exercises && workout.exercises.length > 0 && (
+                  <View>
+                    <Text className="mb-2 text-sm font-medium text-gray-700">Exercises:</Text>
+                    <View className="flex-row flex-wrap">
+                      {getExerciseNames(workout)
+                        .slice(0, 3)
+                        .map((name, index) => (
+                          <View key={index} className="mb-2 mr-2 rounded-lg bg-blue-50 px-3 py-1">
+                            <Text className="text-sm font-medium text-blue-700">{name}</Text>
+                          </View>
+                        ))}
+                      {getExerciseNames(workout).length > 3 && (
+                        <View className="mb-2 mr-2 rounded-lg bg-gray-100 px-3 py-1">
+                          <Text className="text-sm font-medium text-gray-600">
+                            +{getExerciseNames(workout).length - 3} more
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
