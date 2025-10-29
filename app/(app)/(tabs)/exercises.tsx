@@ -89,8 +89,8 @@ export default function Exercises() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={['#3882F6']} // Android
-            tintColor="#3882F6" // iOS
+            colors={['#3B82F6']} // Android
+            tintColor="#3B82F6" // iOS
             title="Pull to refresh exercises" // iOS
             titleColor="#687280" // iOS}
           />

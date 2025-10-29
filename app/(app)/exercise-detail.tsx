@@ -193,13 +193,13 @@ export default function ExerciseDetail() {
           {(aiGuidance || aiLoading) && (
             <View className="mb-6">
               <View className="mb-3 flex-row items-center">
-                <Ionicons name="fitness" size={24} color={'#3882F6'} />
+                <Ionicons name="fitness" size={24} color={'#3B82F6'} />
                 <Text className="ml-2 text-xl font-semibold text-gray-800">AI coach says...</Text>
               </View>
 
               {aiLoading ? (
                 <View className="bg-gray-50r items-center rounded-xl p-4">
-                  <ActivityIndicator size={'small'} color={'#3882F6'} />
+                  <ActivityIndicator size={'small'} color={'#3B82F6'} />
                   <Text className="mt-2 text-gray-600">Getting personalized guidance</Text>
                 </View>
               ) : (

@@ -103,7 +103,7 @@ export default function HistoryPage() {
           <Text className="text-2xl font-bold text-gray-900">Workout History</Text>
         </View>
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#3882F6" />
+          <ActivityIndicator size="large" color="#3B82F6" />
           <Text className="mt-4 text-gray-600">Loading your workouts...</Text>
         </View>
       </SafeAreaView>
