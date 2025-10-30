@@ -5,8 +5,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { defineQuery } from 'groq';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { POST } from '../../api/ai+api';
 
 const getWorkoutRecordQuery = defineQuery(`*[_type == "workout" && _id == $workoutId][0]{
     _id, _type,_createdAt, date, duration, exercises[] {
@@ -100,7 +101,40 @@ export default function WorkoutRecord() {
     return { volume: totalVolume, unit };
   };
 
-  const handleDeleteWorkout = async () => {};
+  const handleDeleteWorkout = () => {
+    Alert.alert(
+      'Delete Workout',
+      'Are you sure you want to delete this workout? This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: deleteWorkout,
+        },
+      ]
+    );
+  };
+
+  const deleteWorkout = async () => {
+    if (!workoutId) return;
+
+    setDeleting(true);
+
+    try {
+      await fetch('/api/delete-workout', {
+        method: 'POST',
+        body: JSON.stringify({ workoutId }),
+      });
+
+      router.replace('/(app)/(tabs)/history?refresh=true');
+    } catch (error) {
+      console.error('Error deleting workout:', error);
+      Alert.alert('Error', 'Failed to delete workout. Please try again', [{ text: 'OK' }]);
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
