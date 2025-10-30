@@ -87,13 +87,13 @@ export default function WorkoutRecord() {
 
   const getTotalVolume = (workout: GetWorkoutRecordQueryResult) => {
     let totalVolume = 0;
-    let unit = 'ibs';
+    let unit = 'lbs';
 
     workout?.exercises?.forEach((exercise) => {
       exercise.sets?.forEach((set) => {
         if (set.weight && set.reps) {
           totalVolume += set.weight * set.reps;
-          unit = set.weightUnit || 'ibs';
+          unit = set.weightUnit || 'lbs';
         }
       });
     });
@@ -194,6 +194,72 @@ export default function WorkoutRecord() {
         </View>
 
         {/* Workout list */}
+        <View className="gap-4 space-y-4 p-6">
+          {workout?.exercises?.map((exerciseData, index) => (
+            <View
+              key={exerciseData._key}
+              className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              {/* exercise header */}
+              <View className="mb-4 flex-row items-center justify-between">
+                <View className="flex-1">
+                  <Text className="text-lg font-bold text-gray-900">
+                    {exerciseData.exercise?.name || 'Unknown Exercise'}
+                  </Text>
+                  <Text className="mt-1 text-sm text-gray-600">
+                    {exerciseData.sets?.length || 0} set{exerciseData.sets?.length !== 1 ? 's' : ''}{' '}
+                    completed
+                  </Text>
+                </View>
+                <View className="h-10 w-10 items-center justify-center rounded-full bg-blue-100">
+                  <Text className="font-bold text-blue-600">{index + 1}</Text>
+                </View>
+              </View>
+
+              {/* sets list */}
+              <View className="space-y-2">
+                <Text className="mb-2 text-sm font-medium text-gray-700">Sets:</Text>
+                {exerciseData.sets?.map((set, setIndex) => (
+                  <View
+                    key={set._key}
+                    className="flex-row items-center justify-between rounded-lg bg-gray-50 p-3">
+                    <View className="flex-row items-center">
+                      <View className="mr-3 h-6 w-6 items-center justify-center rounded-full bg-gray-200">
+                        <Text className="text-xs font-medium text-gray-700">{setIndex + 1}</Text>
+                      </View>
+                      <Text className="font-medium text-gray-900">{set?.reps} reps</Text>
+                    </View>
+
+                    {set.weight && (
+                      <View className="flex-row items-center">
+                        <Ionicons name="barbell-outline" size={16} color={'#6B7280'} />
+                        <Text className="ml-2 font-medium text-gray-700">
+                          {set.weight} {set.weightUnit || 'lbs'}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                ))}
+              </View>
+
+              {/* exercise volume summary */}
+              {exerciseData.sets && exerciseData.sets.length > 0 && (
+                <View className="mt-4 border-t border-gray-100 pt-4">
+                  <View className="flex-row items-center justify-between">
+                    <Text className="text-sm text-gray-600">Exercise Volume:</Text>
+                    <Text className="text-sm font-medium text-gray-900">
+                      {exerciseData.sets
+                        .reduce((total, set) => {
+                          return total + (set.weight || 0) * (set.reps || 0);
+                        }, 0)
+                        .toLocaleString()}{' '}
+                      {exerciseData.sets[0]?.weightUnit || 'lbs'}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
