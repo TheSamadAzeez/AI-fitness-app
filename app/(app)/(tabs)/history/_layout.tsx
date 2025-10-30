@@ -6,7 +6,7 @@ export default function Layout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
         name="workout-record"
-        options={{ headerShown: true, headerTitle: 'Workout Record', headerBackTitle: 'History' }}
+        options={{ headerTitle: 'Workout Record', headerBackTitle: 'History' }}
       />
     </Stack>
   );
