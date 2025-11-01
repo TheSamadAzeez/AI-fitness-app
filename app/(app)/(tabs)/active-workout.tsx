@@ -1,11 +1,22 @@
 import { useWorkoutStore } from '@/store/workout-store';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
-import React from 'react';
-import { Alert, Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useStopwatch } from 'react-timer-hook';
+import { ExerciseSelectionModal } from '../components/exercise-modal';
 
 export default function ActiveWorkout() {
+  const [showExerciseSelectionScreen, setShowExerciseSelectionScreen] = useState(false);
   const router = useRouter();
   const {
     addExerciseToWorkout,
@@ -47,6 +58,10 @@ export default function ActiveWorkout() {
         },
       },
     ]);
+  };
+
+  const addExercise = () => {
+    setShowExerciseSelectionScreen(true);
   };
 
   return (
@@ -113,7 +128,41 @@ export default function ActiveWorkout() {
             </Text>
           </View>
         )}
+
+        {/* all exercises - vertical list */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          className="flex-1 ">
+          <ScrollView className="mt-4 flex-1 px-5">
+            {workoutExercises.map((exercise) => {
+              return (
+                <View key={exercise.id} className="mb-8">
+                  {/* Exercise header */}
+                </View>
+              );
+            })}
+
+            {/* Add exercise button */}
+            <TouchableOpacity
+              onPress={addExercise}
+              className="mb-8 items-center rounded-2xl bg-blue-600 py-4 active:bg-blue-700"
+              activeOpacity={0.7}>
+              <View className="flex-row items-center">
+                <Ionicons name="add" size={20} color="white" style={{ marginRight: 8 }} />
+                <Text className="text-lg font-semibold text-white">Add Exercise</Text>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
+
+          {/*  */}
+        </KeyboardAvoidingView>
       </View>
+
+      {/* Exercise Selection Modal */}
+      <ExerciseSelectionModal
+        visible={showExerciseSelectionScreen}
+        onClose={() => setShowExerciseSelectionScreen(false)}
+      />
     </View>
   );
 }
