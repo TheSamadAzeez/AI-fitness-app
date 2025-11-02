@@ -7,7 +7,6 @@ import { defineQuery } from 'groq';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { POST } from '../../api/ai+api';
 
 const getWorkoutRecordQuery = defineQuery(`*[_type == "workout" && _id == $workoutId][0]{
     _id, _type,_createdAt, date, duration, exercises[] {

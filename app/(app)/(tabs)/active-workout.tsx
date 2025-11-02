@@ -29,15 +29,9 @@ export default function ActiveWorkout() {
   const [showExerciseSelectionScreen, setShowExerciseSelectionScreen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
-  const {
-    addExerciseToWorkout,
-    setWorkoutExercises,
-    setWeightUnit,
-    resetWorkout,
-    weightUnit,
-    workoutExercises,
-  } = useWorkoutStore();
-  const { seconds, minutes, hours, totalSeconds, reset } = useStopwatch({ autoStart: true }); // use the stopwatch hook to track workout duration
+  const { setWorkoutExercises, setWeightUnit, resetWorkout, weightUnit, workoutExercises } =
+    useWorkoutStore();
+  const { seconds, minutes, totalSeconds, reset } = useStopwatch({ autoStart: true }); // use the stopwatch hook to track workout duration
 
   // Reset the workout if there are no exercises when the screen is focused (fresh start)
   useFocusEffect(
