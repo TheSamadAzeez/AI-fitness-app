@@ -49,7 +49,7 @@ export default function Exercises() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-gray-50" edges={['top']}>
       {/* Header */}
       <View className="border-b border-gray-200 bg-white px-6 py-4">
         <Text className="text-2xl font-bold text-gray-900">Exercises Library</Text>

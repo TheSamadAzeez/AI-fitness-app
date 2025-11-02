@@ -169,8 +169,8 @@ export default function WorkoutRecord() {
 
   const { volume, unit } = getTotalVolume(workout);
   return (
-    <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom', 'left', 'right']}>
-      <ScrollView className="flex-1">
+    <SafeAreaView className="flex-1 bg-gray-50" edges={[]}>
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 24 }}>
         {/* Workout Summary */}
         <View className="border-b border-gray-300 bg-white p-6">
           <View className="mb-4 flex-row items-center justify-between">
