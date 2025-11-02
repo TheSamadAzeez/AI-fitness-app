@@ -16,7 +16,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const getWorkoutQuery = defineQuery(`*[_type == "workout" && userId == $userId] | order(date desc){
+export const getWorkoutQuery =
+  defineQuery(`*[_type == "workout" && userId == $userId] | order(date desc){
   _id,
   date,
   duration,
@@ -111,7 +112,7 @@ export default function HistoryPage() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-gray-50" edges={['top']}>
       {/* Header */}
       <View className="border-b border-gray-200 bg-white px-6 py-4">
         <Text className="text-2xl font-bold text-gray-900">Workout History</Text>
