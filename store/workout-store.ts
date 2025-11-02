@@ -4,8 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface WorkoutSet {
   id: string;
-  reps: number;
-  weight: number;
+  reps: string;
+  weight: string;
   weightUnit: 'lbs' | 'kg';
   isCompleted: boolean;
 }
