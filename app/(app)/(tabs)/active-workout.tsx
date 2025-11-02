@@ -1,6 +1,9 @@
+import { client } from '@/src/lib/sanity/client';
 import { useWorkoutStore, WorkoutSet } from '@/store/workout-store';
+import { useUser } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
+import { defineQuery } from 'groq';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -16,13 +19,13 @@ import {
 } from 'react-native';
 import { useStopwatch } from 'react-timer-hook';
 import { ExerciseSelectionModal } from '../components/exercise-modal';
-import { client } from '@/src/lib/sanity/client';
-import { defineQuery } from 'groq';
+import { WorkoutData } from '../api/save-workout+api';
 
 // GROQ query to find exercise by name
 const findExerciseQuery = defineQuery(`*[_type == "exercise" && name == $name][0]{_id, name}`);
 
 export default function ActiveWorkout() {
+  const { user } = useUser();
   const [showExerciseSelectionScreen, setShowExerciseSelectionScreen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
@@ -189,6 +192,35 @@ export default function ActiveWorkout() {
           };
         })
       );
+
+      // filter out exercises with no completed sets
+      const ValidExercises = exercisesForSanity.filter((exercise) => exercise.sets.length > 0);
+
+      if (ValidExercises.length === 0) {
+        Alert.alert(
+          'No Completed Sets',
+          'Please complete at least one set before saving the workout.'
+        );
+        return;
+      }
+
+      // Create the workout document
+      const workoutData: WorkoutData = {
+        _type: 'workout',
+        userId: user?.id as string,
+        date: new Date().toISOString(),
+        duration: durationInSeconds,
+        exercises: ValidExercises,
+      };
+
+      // Save to Sanity
+      const result = await fetch('/api/save-workout', {
+        method: 'POST',
+        body: JSON.stringify({ workoutData }),
+      });
+
+      console.log('Workout saved successfully:', result);
+      return true;
     } catch (error) {
       console.error('Error saving workout:', error);
       Alert.alert('Error', 'There was an error saving your workout. Please try again.');
