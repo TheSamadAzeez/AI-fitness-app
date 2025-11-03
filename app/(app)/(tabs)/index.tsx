@@ -1,6 +1,8 @@
+import { formatDate, formatDuration } from '@/lib/utils';
 import { client } from '@/src/lib/sanity/client';
 import { GetWorkoutQueryResult } from '@/src/lib/sanity/types';
 import { useUser } from '@clerk/clerk-expo';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -13,9 +15,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getWorkoutQuery } from './history/index';
-import { formatDate, formatDuration } from '@/lib/utils';
-import { Ionicons } from '@expo/vector-icons';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export default function HomePage() {
   const { user } = useUser();
