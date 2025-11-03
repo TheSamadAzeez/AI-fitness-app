@@ -205,6 +205,28 @@ export default function HomePage() {
             </TouchableOpacity>
           </View>
         )}
+        {/* empty state for no workouts */}
+        {totalWorkouts === 0 && (
+          <View className="mb-8 px-6">
+            <View className="items-center rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+              <View className="mb-4 h-16 w-16 items-center justify-center rounded-full bg-blue-100">
+                <Ionicons name="barbell-outline" size={32} color="#3B82F6" />
+              </View>
+              <Text className="mb-2 text-xl font-semibold text-gray-900">
+                Ready to start your fitness journey?
+              </Text>
+              <Text className="mb-4 text-center text-gray-600">
+                Track your workouts and see your progress over time
+              </Text>
+              <TouchableOpacity
+                className="rounded-xl bg-blue-600 px-6 py-3"
+                activeOpacity={0.7}
+                onPress={() => router.push('/(app)/(tabs)/workout')}>
+                <Text className="font-semibold text-white">Start your first workout</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
