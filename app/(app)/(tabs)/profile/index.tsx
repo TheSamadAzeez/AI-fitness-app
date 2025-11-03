@@ -26,7 +26,6 @@ export default function ProfilePage() {
     if (!user?.id) return;
 
     try {
-      setLoading(true);
       const result = await client.fetch<GetWorkoutQueryResult>(getWorkoutQuery, {
         userId: user.id,
       });
