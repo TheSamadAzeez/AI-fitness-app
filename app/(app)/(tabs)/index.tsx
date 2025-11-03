@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { getWorkoutQuery } from './history/index';
 import { formatDate, formatDuration } from '@/lib/utils';
 import { Ionicons } from '@expo/vector-icons';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export default function HomePage() {
   const { user } = useUser();
@@ -198,7 +199,9 @@ export default function HomePage() {
               </View>
               <View className="flex-row items-center justify-between">
                 <Text className="text-gray-600">
-                  {lastWorkout.exercises?.length || 0} exercises : {getTotalSets(lastWorkout)} sets
+                  {lastWorkout.exercises?.length || 0}{' '}
+                  {lastWorkout.exercises?.length === 1 ? 'exercise' : 'exercises'} :{' '}
+                  {getTotalSets(lastWorkout)} {getTotalSets(lastWorkout) === 1 ? 'set' : 'sets'}
                 </Text>
                 <Ionicons name="chevron-forward" size={20} color="#6B7280" />
               </View>
